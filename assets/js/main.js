@@ -102,78 +102,7 @@
     });
   });
 
-  
-  
 
-  /**
-   * Init isotope layout and filters
-   */
-  document.querySelectorAll('.isotope-layout').forEach(function(isotopeItem) {
-    let layout = isotopeItem.getAttribute('data-layout') ?? 'masonry';
-    let filter = isotopeItem.getAttribute('data-default-filter') ?? '*';
-    let sort = isotopeItem.getAttribute('data-sort') ?? 'original-order';
-
-    let initIsotope;
-    imagesLoaded(isotopeItem.querySelector('.isotope-container'), function() {
-      initIsotope = new Isotope(isotopeItem.querySelector('.isotope-container'), {
-        itemSelector: '.isotope-item',
-        layoutMode: layout,
-        filter: filter,
-        sortBy: sort
-      });
-    });
-
-    isotopeItem.querySelectorAll('.isotope-filters li').forEach(function(filters) {
-      filters.addEventListener('click', function() {
-        isotopeItem.querySelector('.isotope-filters .filter-active').classList.remove('filter-active');
-        this.classList.add('filter-active');
-        initIsotope.arrange({
-          filter: this.getAttribute('data-filter')
-        });
-        if (typeof aosInit === 'function') {
-          aosInit();
-        }
-      }, false);
-    });
-
-  });
-
-  /**
-   * Init swiper sliders
-   */
-  function initSwiper() {
-    document.querySelectorAll(".init-swiper").forEach(function(swiperElement) {
-      let config = JSON.parse(
-        swiperElement.querySelector(".swiper-config").innerHTML.trim()
-      );
-
-      if (swiperElement.classList.contains("swiper-tab")) {
-        initSwiperWithCustomPagination(swiperElement, config);
-      } else {
-        new Swiper(swiperElement, config);
-      }
-    });
-  }
-
-  window.addEventListener("load", initSwiper);
-
-  /**
-   * Correct scrolling position upon page load for URLs containing hash links.
-   */
-  window.addEventListener('load', function(e) {
-    if (window.location.hash) {
-      if (document.querySelector(window.location.hash)) {
-        setTimeout(() => {
-          let section = document.querySelector(window.location.hash);
-          let scrollMarginTop = getComputedStyle(section).scrollMarginTop;
-          window.scrollTo({
-            top: section.offsetTop - parseInt(scrollMarginTop),
-            behavior: 'smooth'
-          });
-        }, 100);
-      }
-    }
-  });
 
   /**
    * Navmenu Scrollspy
@@ -198,3 +127,63 @@
   document.addEventListener('scroll', navmenuScrollspy);
 
 })();
+
+async function fetchData() {
+  // Ambil gambar dan produk secara paralel
+  const [gambarRes, produkRes] = await Promise.all([
+    fetch('data/gambar.json'),
+    fetch('data/product.xml')
+  ]);
+
+  const gambarData = await gambarRes.json();
+
+  const produkText = await produkRes.text();
+  const parser = new DOMParser();
+  const xmlDoc = parser.parseFromString(produkText, "application/xml");
+  const items = xmlDoc.querySelectorAll('produk > item');
+
+  const produkList = Array.from(items).map(item => ({
+    nama: item.querySelector('nama').textContent,
+    harga: item.querySelector('harga').textContent,
+    kategori: item.querySelector('kategori').textContent,
+  }));
+
+  return { produkList, gambarList: gambarData.gambar };
+}
+
+function renderProduk(produkList, gambarList) {
+  const container = document.getElementById('produk-container');
+  container.innerHTML = '';
+
+  produkList.forEach((produk, i) => {
+    const gambar = gambarList[i] || 'assets/img/default.png';
+
+    const col = document.createElement('div');
+    col.className = 'col-lg-4 col-md-6 portfolio-item filter-app';
+
+    col.innerHTML = `
+      <div class="portfolio-content h-100">
+        <img src="${gambar}" class="img-fluid" alt="${produk.nama}">
+        <div class="portfolio-info">
+          <h4>${produk.kategori}</h4>
+          <h3>${produk.nama}</h3>
+          <p>Harga: Rp${produk.harga}</p>
+        </div>
+      </div>
+    `;
+
+    container.appendChild(col);
+  });
+}
+
+async function loadProduk() {
+  try {
+    const { produkList, gambarList } = await fetchData();
+    renderProduk(produkList, gambarList);
+  } catch (error) {
+    console.error('Gagal memuat produk:', error);
+  }
+}
+
+// Panggil saat halaman sudah siap
+document.addEventListener('DOMContentLoaded', loadProduk);

@@ -906,113 +906,6 @@ section,
   background: #fff;
 }
 
-/*--------------------------------------------------------------
-# Pricing Section
---------------------------------------------------------------*/
-.pricing .pricing-tem {
-  background-color: var(--surface-color);
-  box-shadow: 0px 0 30px rgba(0, 0, 0, 0.1);
-  padding: 40px 20px;
-  text-align: center;
-  border-radius: 4px;
-  position: relative;
-  overflow: hidden;
-  transition: 0.3s;
-  height: 100%;
-}
-
-@media (min-width: 1200px) {
-  .pricing .pricing-tem:hover {
-    transform: scale(1.1);
-    box-shadow: 0px 0 30px rgba(0, 0, 0, 0.1);
-  }
-}
-
-.pricing h3 {
-  font-weight: 700;
-  font-size: 18px;
-  margin-bottom: 15px;
-}
-
-.pricing .price {
-  font-size: 36px;
-  color: var(--heading-color);
-  font-weight: 600;
-  font-family: var(--heading-font);
-}
-
-.pricing .price sup {
-  font-size: 20px;
-  top: -15px;
-  left: -3px;
-}
-
-.pricing .price span {
-  color: color-mix(in srgb, var(--default-color), transparent 50%);
-  font-size: 16px;
-  font-weight: 300;
-}
-
-.pricing .icon {
-  padding: 20px 0;
-}
-
-.pricing .icon i {
-  font-size: 48px;
-}
-
-.pricing ul {
-  padding: 0;
-  list-style: none;
-  color: var(--default-color);
-  text-align: center;
-  line-height: 26px;
-  font-size: 16px;
-  margin-bottom: 25px;
-}
-
-.pricing ul li {
-  padding-bottom: 10px;
-}
-
-.pricing ul .na {
-  color: color-mix(in srgb, var(--default-color), transparent 70%);
-  text-decoration: line-through;
-}
-
-.pricing .btn-buy {
-  display: inline-block;
-  padding: 8px 40px 10px 40px;
-  border-radius: 50px;
-  color: var(--accent-color);
-  transition: none;
-  font-size: 16px;
-  font-weight: 400;
-  font-family: var(--heading-font);
-  font-weight: 600;
-  transition: 0.3s;
-  border: 1px solid var(--accent-color);
-}
-
-.pricing .btn-buy:hover {
-  background: var(--accent-color);
-  color: var(--contrast-color);
-}
-
-.pricing .featured {
-  width: 200px;
-  position: absolute;
-  top: 18px;
-  right: -68px;
-  transform: rotate(45deg);
-  z-index: 1;
-  font-size: 14px;
-  padding: 1px 0 3px 0;
-  background: var(--accent-color);
-  color: var(--contrast-color);
-}
-
-
 .faq .faq-container .faq-item {
   position: relative;
   padding: 20px;
@@ -1044,14 +937,12 @@ section,
 }
 
 
-/*--------------------------------------------------------------
-# Portfolio Section
---------------------------------------------------------------*/
 .portfolio .portfolio-filters {
   padding: 0;
   margin: 0 auto 20px auto;
   list-style: none;
   text-align: center;
+  margin-top: 10px;
 }
 
 .portfolio .portfolio-filters li {
@@ -1114,6 +1005,14 @@ section,
   background-color: var(--accent-color);
 }
 
+.portfolio .portfolio-content .portfolio-info h3 {
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+}
+
 .portfolio .portfolio-content .portfolio-info p {
   position: absolute;
   bottom: 10px;
@@ -1142,11 +1041,6 @@ section,
   color: var(--accent-color);
 }
 
-.portfolio .portfolio-content .portfolio-info .details-link {
-  left: 50%;
-  font-size: 34px;
-  line-height: 0;
-}
 
 .portfolio .portfolio-content:hover .portfolio-info {
   opacity: 1;
@@ -1272,69 +1166,6 @@ section,
 .contact .php-email-form button[type=submit]:hover {
   background: color-mix(in srgb, var(--accent-color), transparent 20%);
 }
-
-/*--------------------------------------------------------------
-# Portfolio Details Section
---------------------------------------------------------------*/
-.portfolio-details .portfolio-details-slider img {
-  width: 100%;
-}
-
-.portfolio-details .portfolio-details-slider .swiper-pagination {
-  margin-top: 20px;
-  position: relative;
-}
-
-.portfolio-details .portfolio-details-slider .swiper-pagination .swiper-pagination-bullet {
-  width: 12px;
-  height: 12px;
-  background-color: color-mix(in srgb, var(--default-color), transparent 85%);
-  opacity: 1;
-}
-
-.portfolio-details .portfolio-details-slider .swiper-pagination .swiper-pagination-bullet-active {
-  background-color: var(--accent-color);
-}
-
-.portfolio-details .portfolio-info {
-  background-color: var(--surface-color);
-  padding: 30px;
-  box-shadow: 0px 0 30px rgba(0, 0, 0, 0.1);
-}
-
-.portfolio-details .portfolio-info h3 {
-  font-size: 22px;
-  font-weight: 700;
-  margin-bottom: 20px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid color-mix(in srgb, var(--default-color), transparent 85%);
-}
-
-.portfolio-details .portfolio-info ul {
-  list-style: none;
-  padding: 0;
-  font-size: 15px;
-}
-
-.portfolio-details .portfolio-info ul li+li {
-  margin-top: 10px;
-}
-
-.portfolio-details .portfolio-description {
-  padding-top: 30px;
-}
-
-.portfolio-details .portfolio-description h2 {
-  font-size: 26px;
-  font-weight: 700;
-  margin-bottom: 20px;
-}
-
-.portfolio-details .portfolio-description p {
-  padding: 0;
-  color: color-mix(in srgb, var(--default-color), transparent 30%);
-}
-
 
 .service-details .service-box {
   background-color: var(--surface-color);
