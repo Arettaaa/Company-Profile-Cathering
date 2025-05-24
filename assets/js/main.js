@@ -1,8 +1,8 @@
 
-(function() {
+(function () {
   "use strict";
 
-  
+
   function toggleScrolled() {
     const selectBody = document.querySelector('body');
     const selectHeader = document.querySelector('#header');
@@ -43,7 +43,7 @@
    * Toggle mobile nav dropdowns
    */
   document.querySelectorAll('.navmenu .toggle-dropdown').forEach(navmenu => {
-    navmenu.addEventListener('click', function(e) {
+    navmenu.addEventListener('click', function (e) {
       e.preventDefault();
       this.parentNode.classList.toggle('active');
       this.parentNode.nextElementSibling.classList.toggle('dropdown-active');
@@ -75,24 +75,24 @@
   document.addEventListener('DOMContentLoaded', function () {
     // Ambil semua item FAQ
     const faqItems = document.querySelectorAll('.faq-item');
-  
+
     faqItems.forEach(item => {
       const header = item.querySelector('h3'); // Ambil judul FAQ
       const toggleIcon = item.querySelector('.faq-toggle'); // Ambil ikon toggle
       const content = item.querySelector('.faq-content'); // Ambil konten FAQ
-      
+
       // Ketika header FAQ diklik
-      header.addEventListener('click', function() {
+      header.addEventListener('click', function () {
         // Toggle kelas untuk menampilkan atau menyembunyikan konten
         item.classList.toggle('faq-active');
-        
+
         // Toggle rotasi ikon toggle
         toggleIcon.classList.toggle('bi-chevron-down');
         toggleIcon.classList.toggle('bi-chevron-up');
       });
     });
   });
-  
+
   document.querySelectorAll('.client-img').forEach(img => {
     img.addEventListener('click', () => {
       // Hapus active dari semua gambar
@@ -129,7 +129,7 @@
 })();
 
 async function fetchData() {
-  // Ambil gambar dan produk secara paralel
+  // Ambil gambar dan produk s
   const [gambarRes, produkRes] = await Promise.all([
     fetch('data/gambar.json'),
     fetch('data/product.xml')
@@ -151,12 +151,17 @@ async function fetchData() {
   return { produkList, gambarList: gambarData.gambar };
 }
 
-function renderProduk(produkList, gambarList) {
+function renderProduk(produkList, gambarList, page = 1, itemsPerPage = 12) {
   const container = document.getElementById('produk-container');
   container.innerHTML = '';
 
-  produkList.forEach((produk, i) => {
-    const gambar = gambarList[i] || 'assets/img/default.png';
+  const startIndex = (page - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedProduk = produkList.slice(startIndex, endIndex);
+  const paginatedGambar = gambarList.slice(startIndex, endIndex);
+
+  paginatedProduk.forEach((produk, i) => {
+    const gambar = paginatedGambar[i] || 'assets/img/default.png';
 
     const col = document.createElement('div');
     col.className = 'col-lg-4 col-md-6 portfolio-item filter-app';
@@ -174,16 +179,44 @@ function renderProduk(produkList, gambarList) {
 
     container.appendChild(col);
   });
+
+  renderPagination(produkList.length, page, itemsPerPage);
 }
+
+function renderPagination(totalItems, currentPage, itemsPerPage) {
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const paginationContainer = document.getElementById('pagination-container');
+  paginationContainer.innerHTML = '';
+
+  const ul = document.createElement('ul');
+  ul.className = 'pagination justify-content-center';
+
+  for (let i = 1; i <= totalPages; i++) {
+    const li = document.createElement('li');
+    li.className = `page-item ${i === currentPage ? 'active' : ''}`;
+    li.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+    li.addEventListener('click', (e) => {
+      e.preventDefault();
+      renderProduk(window._produkList, window._gambarList, i, itemsPerPage);
+    });
+    ul.appendChild(li);
+  }
+
+  paginationContainer.appendChild(ul);
+}
+
+
 
 async function loadProduk() {
   try {
     const { produkList, gambarList } = await fetchData();
-    renderProduk(produkList, gambarList);
+    window._produkList = produkList; // Simpan global
+    window._gambarList = gambarList;
+    renderProduk(produkList, gambarList, 1, 12);
   } catch (error) {
     console.error('Gagal memuat produk:', error);
   }
 }
 
-// Panggil saat halaman sudah siap
+
 document.addEventListener('DOMContentLoaded', loadProduk);
