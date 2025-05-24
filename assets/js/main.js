@@ -129,14 +129,12 @@
 })();
 
 async function fetchData() {
-  // Ambil gambar dan produk s
   const [gambarRes, produkRes] = await Promise.all([
     fetch('data/gambar.json'),
     fetch('data/product.xml')
   ]);
 
   const gambarData = await gambarRes.json();
-
   const produkText = await produkRes.text();
   const parser = new DOMParser();
   const xmlDoc = parser.parseFromString(produkText, "application/xml");
@@ -162,9 +160,9 @@ function renderProduk(produkList, gambarList, page = 1, itemsPerPage = 12) {
 
   paginatedProduk.forEach((produk, i) => {
     const gambar = paginatedGambar[i] || 'assets/img/default.png';
-
     const col = document.createElement('div');
-    col.className = 'col-lg-4 col-md-6 portfolio-item filter-app';
+    col.className = `col-lg-4 col-md-6 portfolio-item filter-${produk.kategori.toLowerCase()}`;
+    col.setAttribute('data-kategori', produk.kategori);
 
     col.innerHTML = `
       <div class="portfolio-content h-100">
@@ -184,9 +182,18 @@ function renderProduk(produkList, gambarList, page = 1, itemsPerPage = 12) {
 }
 
 function renderPagination(totalItems, currentPage, itemsPerPage) {
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
   const paginationContainer = document.getElementById('pagination-container');
   paginationContainer.innerHTML = '';
+
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  // Kalau total halaman cuma 1, sembunyikan pagination
+  if (totalPages <= 1) {
+    paginationContainer.style.display = 'none';
+    return;
+  } else {
+    paginationContainer.style.display = 'block';
+  }
 
   const ul = document.createElement('ul');
   ul.className = 'pagination justify-content-center';
@@ -197,7 +204,8 @@ function renderPagination(totalItems, currentPage, itemsPerPage) {
     li.innerHTML = `<a class="page-link" href="#">${i}</a>`;
     li.addEventListener('click', (e) => {
       e.preventDefault();
-      renderProduk(window._produkList, window._gambarList, i, itemsPerPage);
+      const filter = document.querySelector('#filter-buttons .filter-active').getAttribute('data-filter');
+      applyFilter(filter, i);
     });
     ul.appendChild(li);
   }
@@ -205,18 +213,44 @@ function renderPagination(totalItems, currentPage, itemsPerPage) {
   paginationContainer.appendChild(ul);
 }
 
+function applyFilter(kategori, page = 1) {
+  let produkFiltered = [...window._produkList];
+  let gambarFiltered = [...window._gambarList];
 
+  if (kategori !== 'all') {
+    produkFiltered = produkFiltered.filter(p => p.kategori === kategori);
+    // Asumsikan urutan gambar sesuai produk
+    const indexes = window._produkList
+      .map((p, i) => (p.kategori === kategori ? i : -1))
+      .filter(i => i !== -1);
+    gambarFiltered = indexes.map(i => window._gambarList[i]);
+  }
+
+  renderProduk(produkFiltered, gambarFiltered, page, 12);
+}
+
+function setupFilterButtons() {
+  const buttons = document.querySelectorAll('#filter-buttons li');
+  buttons.forEach(button => {
+    button.addEventListener('click', () => {
+      buttons.forEach(btn => btn.classList.remove('filter-active'));
+      button.classList.add('filter-active');
+      const kategori = button.getAttribute('data-filter');
+      applyFilter(kategori, 1);
+    });
+  });
+}
 
 async function loadProduk() {
   try {
     const { produkList, gambarList } = await fetchData();
-    window._produkList = produkList; // Simpan global
+    window._produkList = produkList;
     window._gambarList = gambarList;
-    renderProduk(produkList, gambarList, 1, 12);
+    setupFilterButtons();
+    applyFilter('all', 1);
   } catch (error) {
     console.error('Gagal memuat produk:', error);
   }
 }
-
 
 document.addEventListener('DOMContentLoaded', loadProduk);

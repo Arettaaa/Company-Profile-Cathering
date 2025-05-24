@@ -20,6 +20,21 @@
     <kategori>Makanan</kategori>
   </item>
   <item>
+    <nama>Es Buah</nama>
+    <harga>8000</harga>
+    <kategori>Minuman</kategori>
+  </item>
+  <item>
+    <nama>Kolak Pisang</nama>
+    <harga>8000</harga>
+    <kategori>Minuman</kategori>
+  </item>
+  <item>
+    <nama>Bubur Kacang Hijau</nama>
+    <harga>8000</harga>
+    <kategori>Minuman</kategori>
+  </item>
+  <item>
     <nama>Semur Ati Ampela</nama>
     <harga>8000</harga>
     <kategori>Makanan</kategori>
@@ -96,6 +111,131 @@
   </item>
   <item>
     <nama>Udang Asam Manis</nama>
+    <harga>8000</harga>
+    <kategori>Makanan</kategori>
+  </item>
+  <item>
+    <nama>Nasi Putih</nama>
+    <harga>8000</harga>
+    <kategori>Makanan</kategori>
+  </item>
+  <item>
+    <nama>Nasi Goreng</nama>
+    <harga>8000</harga>
+    <kategori>Makanan</kategori>
+  </item>
+  <item>
+    <nama>Nasi Liwet</nama>
+    <harga>8000</harga>
+    <kategori>Makanan</kategori>
+  </item>
+  <item>
+    <nama>Nasi Kuning</nama>
+    <harga>8000</harga>
+    <kategori>Makanan</kategori>
+  </item>
+  <item>
+    <nama>Nasi Uduk</nama>
+    <harga>8000</harga>
+    <kategori>Makanan</kategori>
+  </item>
+  <item>
+    <nama>Ikan Pesmol</nama>
+    <harga>8000</harga>
+    <kategori>Makanan</kategori>
+  </item>
+  <item>
+    <nama>Nila Goreng</nama>
+    <harga>8000</harga>
+    <kategori>Makanan</kategori>
+  </item>
+  <item>
+    <nama>Nila Asam Manis</nama>
+    <harga>8000</harga>
+    <kategori>Makanan</kategori>
+  </item>
+  <item>
+    <nama>Tongkol Bumbu Kuning</nama>
+    <harga>8000</harga>
+    <kategori>Makanan</kategori>
+  </item>
+  <item>
+    <nama>Ikan Asin Balado</nama>
+    <harga>8000</harga>
+    <kategori>Makanan</kategori>
+  </item>
+  <item>
+    <nama>Tumis Remis</nama>
+    <harga>8000</harga>
+    <kategori>Makanan</kategori>
+  </item>
+  <item>
+    <nama>Rendang Ati Sapi</nama>
+    <harga>8000</harga>
+    <kategori>Makanan</kategori>
+  </item>
+  <item>
+    <nama>Teri Kacang</nama>
+    <harga>8000</harga>
+    <kategori>Makanan</kategori>
+  </item>
+  <item>
+    <nama>Laksa</nama>
+    <harga>8000</harga>
+    <kategori>Makanan</kategori>
+  </item>
+  <item>
+    <nama>Capcay</nama>
+    <harga>8000</harga>
+    <kategori>Makanan</kategori>
+  </item>
+  <item>
+    <nama>Cah Sawi Putih</nama>
+    <harga>8000</harga>
+    <kategori>Makanan</kategori>
+  </item>
+  <item>
+    <nama>Tumis Buncis</nama>
+    <harga>8000</harga>
+    <kategori>Makanan</kategori>
+  </item>
+  <item>
+    <nama>Tumis Terong</nama>
+    <harga>8000</harga>
+    <kategori>Makanan</kategori>
+  </item>
+  <item>
+    <nama>Peyek Udang</nama>
+    <harga>8000</harga>
+    <kategori>Makanan</kategori>
+  </item>
+  <item>
+    <nama>Bakwan Sayur</nama>
+    <harga>8000</harga>
+    <kategori>Makanan</kategori>
+  </item>
+  <item>
+    <nama>Bakwan Jagung</nama>
+    <harga>8000</harga>
+    <kategori>Makanan</kategori>
+  </item>
+  <item>
+    <nama>Teriyaki Daging Sapi</nama>
+    <harga>8000</harga>
+    <kategori>Makanan</kategori>
+  </item>
+  <item>
+    <nama>Tempe Goreng</nama>
+    <harga>8000</harga>
+    <kategori>Makanan</kategori>
+  </item>
+  <item>
+    <nama>Tempe Orek</nama>
+    <harga>8000</harga>
+    <kategori>Makanan</kategori>
+  </item>
+  <item>
+    <nama>Tempe Bacem</nama>
     <harga>8000</harga>
     <kategori>Makanan</kategori>
   </item>
