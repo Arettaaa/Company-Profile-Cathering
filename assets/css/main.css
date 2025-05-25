@@ -1065,43 +1065,6 @@ section,
   color: white;
 }
 
-
-.team .team-member {
-  box-shadow: 0px 0 40px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  text-align: center;
-  border-radius: 5px;
-  transition: 0.3s;
-}
-
-.team .team-member .member-img {
-  position: relative;
-  overflow: hidden;
-  max-height: 200px;
-}
-
-.team .team-member .member-info {
-  padding: 10px 15px 20px 15px;
-}
-
-.team .team-member .member-info h4 {
-  font-weight: 700;
-  margin-bottom: 5px;
-  font-size: 20px;
-}
-
-.team .team-member .member-info span {
-  display: block;
-  font-size: 14px;
-  font-weight: 400;
-  color: color-mix(in srgb, var(--default-color), transparent 50%);
-}
-
-.team .team-member:hover {
-  transform: scale(1.08);
-  box-shadow: 0px 0 30px rgba(0, 0, 0, 0.1);
-}
-
 .client-img {
   opacity: 0.5;
   transition: 0.3s;
