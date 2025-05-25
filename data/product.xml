@@ -310,11 +310,6 @@
     <kategori>Makanan</kategori>
   </item>
   <item>
-    <nama>Jukut</nama>
-    <harga>8000</harga>
-    <kategori>Makanan</kategori>
-  </item>
-  <item>
     <nama>Telur Mata Sapi</nama>
     <harga>8000</harga>
     <kategori>Makanan</kategori>
@@ -356,6 +351,11 @@
   </item>
   <item>
     <nama>Cumi Cabai Hijau</nama>
+    <harga>8000</harga>
+    <kategori>Makanan</kategori>
+  </item>
+   <item>
+    <nama>Nasi Goreng</nama>
     <harga>8000</harga>
     <kategori>Makanan</kategori>
   </item>
