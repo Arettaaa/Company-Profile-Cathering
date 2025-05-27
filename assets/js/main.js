@@ -1,7 +1,5 @@
-
 (function () {
   "use strict";
-
 
   function toggleScrolled() {
     const selectBody = document.querySelector('body');
@@ -36,7 +34,6 @@
         mobileNavToogle();
       }
     });
-
   });
 
   /**
@@ -77,16 +74,12 @@
     const faqItems = document.querySelectorAll('.faq-item');
 
     faqItems.forEach(item => {
-      const header = item.querySelector('h3'); // Ambil judul FAQ
-      const toggleIcon = item.querySelector('.faq-toggle'); // Ambil ikon toggle
-      const content = item.querySelector('.faq-content'); // Ambil konten FAQ
+      const header = item.querySelector('h3');
+      const toggleIcon = item.querySelector('.faq-toggle');
+      const content = item.querySelector('.faq-content');
 
-      // Ketika header FAQ diklik
       header.addEventListener('click', function () {
-        // Toggle kelas untuk menampilkan atau menyembunyikan konten
         item.classList.toggle('faq-active');
-
-        // Toggle rotasi ikon toggle
         toggleIcon.classList.toggle('bi-chevron-down');
         toggleIcon.classList.toggle('bi-chevron-up');
       });
@@ -95,14 +88,10 @@
 
   document.querySelectorAll('.client-img').forEach(img => {
     img.addEventListener('click', () => {
-      // Hapus active dari semua gambar
       document.querySelectorAll('.client-img').forEach(i => i.classList.remove('active'));
-      // Tambah active ke gambar yang diklik
       img.classList.add('active');
     });
   });
-
-
 
   /**
    * Navmenu Scrollspy
@@ -138,15 +127,28 @@ async function fetchData() {
   const produkText = await produkRes.text();
   const parser = new DOMParser();
   const xmlDoc = parser.parseFromString(produkText, "application/xml");
+  
+  // Ambil data produk individual
   const items = xmlDoc.querySelectorAll('produk > item');
-
   const produkList = Array.from(items).map(item => ({
     nama: item.querySelector('nama').textContent,
     harga: item.querySelector('harga').textContent,
     kategori: item.querySelector('kategori').textContent,
   }));
 
-  return { produkList, gambarList: gambarData.gambar };
+  // Ambil data paket harga
+  const paketNodes = xmlDoc.querySelectorAll('produkpaket');
+  const paketList = Array.from(paketNodes).map(paket => {
+    const kategori = paket.querySelector('kategori').textContent;
+    const items = Array.from(paket.querySelectorAll('item')).map(item => ({
+      nama: item.querySelector('nama').textContent,
+      harga: item.querySelector('harga').textContent,
+      satuan: item.querySelector('satuan') ? item.querySelector('satuan').textContent : 'pax'
+    }));
+    return { kategori, items };
+  });
+
+  return { produkList, gambarList: gambarData.gambar, paketList };
 }
 
 function renderProduk(produkList, gambarList, page = 1, itemsPerPage = 12) {
@@ -181,13 +183,91 @@ function renderProduk(produkList, gambarList, page = 1, itemsPerPage = 12) {
   renderPagination(produkList.length, page, itemsPerPage);
 }
 
+
+function fetchHargaPaketXML() {
+  fetch('harga-paket.xml')
+    .then(response => response.text())
+    .then(xmlText => {
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(xmlText, 'application/xml');
+
+      const items = xmlDoc.querySelectorAll('item');
+      const paketItems = [];
+
+      items.forEach(item => {
+        const nama = item.querySelector('nama')?.textContent || '';
+        const harga = item.querySelector('harga')?.textContent || '';
+        const satuan = item.querySelector('satuan')?.textContent || '';
+
+        paketItems.push({ nama, harga, satuan });
+      });
+
+      const paketList = [
+        {
+          kategori: 'Acara Keluarga', // Ubah sesuai kategori yang kamu mau
+          items: paketItems
+        }
+      ];
+
+      renderPaketHarga(paketList);
+    })
+    .catch(err => console.error('Gagal fetch XML:', err));
+}
+
+function renderPaketHarga(paketList) {
+  const pricingContainer = document.querySelector('#pricing-row');
+  if (!pricingContainer) return;
+
+  pricingContainer.innerHTML = '';
+
+  paketList.forEach((paket, index) => {
+    const col = document.createElement('div');
+    col.className = 'col-lg-4 col-md-6';
+
+    let paketItemsHTML = '';
+    paket.items.forEach(item => {
+      paketItemsHTML += `
+        <h4 style="color: #304750;">${item.nama}:</h4>
+        <div class="price">Rp ${item.harga}<span> / ${item.satuan}</span></div>
+      `;
+    });
+
+    let deskripsi = [];
+    if (paket.kategori === 'Acara Keluarga') {
+      deskripsi = ['Pernikahan', 'Ulang Tahun', 'Arisan'];
+    } else if (paket.kategori === 'Acara Perusahaan & Instansi') {
+      deskripsi = ['Rapat', 'Pelatihan', 'Event Korporat'];
+    } else if (paket.kategori === 'Konsumsi Perusahaan') {
+      deskripsi = ['Langganan Harian', 'Langganan Mingguan', 'Langganan Bulanan'];
+    }
+
+    const deskripsiHTML = deskripsi.map(item => `<li>${item}</li>`).join('');
+
+    col.innerHTML = `
+      <div class="pricing-tem">
+        <h3 style="color: #d17ecc;">${paket.kategori}</h3>
+        <ul>
+          ${deskripsiHTML}
+        </ul>
+        ${paketItemsHTML}
+        <a href="#" class="btn-buy">Pesan</a>
+      </div>
+    `;
+
+    pricingContainer.appendChild(col);
+  });
+}
+
+// Panggil fungsi fetch saat halaman siap
+document.addEventListener('DOMContentLoaded', fetchHargaPaketXML);
+
+
 function renderPagination(totalItems, currentPage, itemsPerPage) {
   const paginationContainer = document.getElementById('pagination-container');
   paginationContainer.innerHTML = '';
 
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-  // Kalau total halaman cuma 1, sembunyikan pagination
   if (totalPages <= 1) {
     paginationContainer.style.display = 'none';
     return;
@@ -219,7 +299,6 @@ function applyFilter(kategori, page = 1) {
 
   if (kategori !== 'all') {
     produkFiltered = produkFiltered.filter(p => p.kategori === kategori);
-    // Asumsikan urutan gambar sesuai produk
     const indexes = window._produkList
       .map((p, i) => (p.kategori === kategori ? i : -1))
       .filter(i => i !== -1);
@@ -243,11 +322,16 @@ function setupFilterButtons() {
 
 async function loadProduk() {
   try {
-    const { produkList, gambarList } = await fetchData();
+    const { produkList, gambarList, paketList } = await fetchData();
     window._produkList = produkList;
     window._gambarList = gambarList;
+    window._paketList = paketList;
+    
     setupFilterButtons();
     applyFilter('all', 1);
+    
+    // Render paket harga dari XML
+    renderPaketHarga(paketList);
   } catch (error) {
     console.error('Gagal memuat produk:', error);
   }

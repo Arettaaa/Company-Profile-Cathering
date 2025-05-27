@@ -1,0 +1,58 @@
+<produkpaketlist>
+  <produkpaket>
+    <kategori>Acara Keluarga</kategori>
+    <item>
+      <nama>Paket Standar</nama>
+      <harga>35.000 – 50.000</harga>
+      <satuan>pax</satuan>
+    </item>
+    <item>
+      <nama>Paket Spesial</nama>
+      <harga>55.000 – 70.000</harga>
+      <satuan>pax</satuan>
+    </item>
+    <item>
+      <nama>Paket Premium</nama>
+      <harga>75.000 – 90.000</harga>
+      <satuan>pax</satuan>
+    </item>
+  </produkpaket>
+
+  <produkpaket>
+    <kategori>Acara Perusahaan & Instansi</kategori>
+    <item>
+      <nama>Snack Box</nama>
+      <harga>15.000 – 25.000</harga>
+      <satuan>box</satuan>
+    </item>
+    <item>
+      <nama>Lunch Box / Nasi Kotak</nama>
+      <harga>30.000 – 55.000</harga>
+      <satuan>pax</satuan>
+    </item>
+    <item>
+      <nama>Coffee Break Paket</nama>
+      <harga>25.000 – 30.000</harga>
+      <satuan>pax</satuan>
+    </item>
+  </produkpaket>
+
+  <produkpaket>
+    <kategori>Konsumsi Perusahaan</kategori>
+    <item>
+      <nama>Paket Standar</nama>
+      <harga>20.000 – 30.000</harga>
+      <satuan>pax</satuan>
+    </item>
+    <item>
+      <nama>Paket Menu Lengkap</nama>
+      <harga>35.000 – 40.000</harga>
+      <satuan>pax</satuan>
+    </item>
+    <item>
+      <nama>Paket Premium Sehat</nama>
+      <harga>45.000 – 55.000</harga>
+      <satuan>pax</satuan>
+    </item>
+  </produkpaket>
+</produkpaketlist>
