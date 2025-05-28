@@ -1,4 +1,5 @@
-<produkpaketlist>
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
   <produkpaket>
     <kategori>Acara Keluarga</kategori>
     <item>
@@ -19,7 +20,7 @@
   </produkpaket>
 
   <produkpaket>
-    <kategori>Acara Perusahaan & Instansi</kategori>
+    <kategori>Acara Perusahaan &amp; Instansi</kategori>
     <item>
       <nama>Snack Box</nama>
       <harga>15.000 – 25.000</harga>
@@ -55,4 +56,4 @@
       <satuan>pax</satuan>
     </item>
   </produkpaket>
-</produkpaketlist>
+</root>
