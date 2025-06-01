@@ -11,9 +11,6 @@
   document.addEventListener('scroll', toggleScrolled);
   window.addEventListener('load', toggleScrolled);
 
-  /**
-   * Mobile nav toggle
-   */
   const mobileNavToggleBtn = document.querySelector('.mobile-nav-toggle');
 
   function mobileNavToogle() {
@@ -97,9 +94,7 @@
     });
   });
 
-  /**
-   * Navmenu Scrollspy
-   */
+
   let navmenulinks = document.querySelectorAll('.navmenu a');
 
   function navmenuScrollspy() {
@@ -121,6 +116,25 @@
 
 })();
 
+  let allProduk = [];
+  let allGambar = [];
+  let filteredProduk = [];
+  let filteredGambar = [];
+  let currentPage = 1;
+  const itemsPerPage = 12;
+  let isSearchMode = false; // Flag untuk mendeteksi mode pencarian
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    const data = await fetchProdukData();
+    allProduk = data.produkList;
+    allGambar = data.gambarList;
+    filteredProduk = allProduk;
+    filteredGambar = allGambar;
+    renderProduk(filteredProduk, filteredGambar, currentPage, itemsPerPage);
+    setupSearch();
+    setupFilterButtons();
+  });
+
 // FETCH DATA PRODUK INDIVIDUAL
 async function fetchProdukData() {
   try {
@@ -134,7 +148,6 @@ async function fetchProdukData() {
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(produkText, "application/xml");
     
-    // Ambil data produk individual
     const items = xmlDoc.querySelectorAll('produk > item');
     const produkList = Array.from(items).map(item => ({
       nama: item.querySelector('nama').textContent,
@@ -154,6 +167,20 @@ function renderProduk(produkList, gambarList, page = 1, itemsPerPage = 12) {
   if (!container) return;
   
   container.innerHTML = '';
+
+  if (produkList.length === 0) {
+    container.innerHTML = `
+      <div class="col-12 text-center py-5">
+        <h3 style="color: #304750; font-weight: 600; margin-bottom: 1rem; margin-top: 1rem; font-size: 24px;">Produk Tidak Tersedia</h3>
+        <p>Maaf, produk yang Anda cari saat ini tidak ditemukan.</p>
+      </div>
+    `;
+    const paginationContainer = document.getElementById('pagination-container');
+    if (paginationContainer) {
+      paginationContainer.style.display = 'none';
+    }
+    return;
+  }
 
   const startIndex = (page - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -183,6 +210,7 @@ function renderProduk(produkList, gambarList, page = 1, itemsPerPage = 12) {
   renderPagination(produkList.length, page, itemsPerPage);
 }
 
+ 
 // FETCH DATA PAKET HARGA TERPISAH - FIXED VERSION
 async function fetchPaketHarga() {
   try {
@@ -249,21 +277,17 @@ function renderPaketHarga(paketList) {
     return;
   }
 
-  // BERSIHKAN CONTAINER
   pricingContainer.innerHTML = '';
 
-  // Validasi input
   if (!Array.isArray(paketList) || paketList.length === 0) {
     console.error('Invalid or empty paket list');
     pricingContainer.innerHTML = '<div class="col-12"><p class="text-center">Tidak ada data paket tersedia</p></div>';
     return;
   }
 
-  // RENDER SEMUA PAKET
   paketList.forEach((paket, index) => {
     console.log(`Rendering paket ${index + 1}:`, paket);
     
-    // Validasi struktur paket
     if (!paket.kategori || !Array.isArray(paket.items)) {
       console.error(`Invalid paket structure at index ${index}:`, paket);
       return;
@@ -287,7 +311,6 @@ function renderPaketHarga(paketList) {
       paketItemsHTML = '<p class="text-muted">Tidak ada item tersedia</p>';
     }
 
-    // Tentukan deskripsi berdasarkan kategori
     let deskripsi = [];
     const kategoriLower = paket.kategori.toLowerCase();
     
@@ -298,7 +321,6 @@ function renderPaketHarga(paketList) {
     } else if (kategoriLower.includes('konsumsi')) {
       deskripsi = ['Langganan Harian', 'Langganan Mingguan', 'Langganan Bulanan'];
     } else {
-      // Default untuk kategori yang tidak dikenali
       deskripsi = ['Berbagai Event', 'Acara Khusus', 'Layanan Katering'];
     }
 
@@ -346,9 +368,15 @@ function renderPagination(totalItems, currentPage, itemsPerPage) {
     li.innerHTML = `<a class="page-link" href="#">${i}</a>`;
     li.addEventListener('click', (e) => {
       e.preventDefault();
-      const filterBtn = document.querySelector('#filter-buttons .filter-active');
-      const filter = filterBtn ? filterBtn.getAttribute('data-filter') : 'all';
-      applyFilter(filter, i);
+      if (isSearchMode) {
+        // Jika dalam mode pencarian, gunakan hasil pencarian
+        performSearch(i);
+      } else {
+        // Jika tidak dalam mode pencarian, gunakan filter biasa
+        const filterBtn = document.querySelector('#filter-buttons .filter-active');
+        const filter = filterBtn ? filterBtn.getAttribute('data-filter') : 'all';
+        applyFilter(filter, i);
+      }
     });
     ul.appendChild(li);
   }
@@ -358,6 +386,8 @@ function renderPagination(totalItems, currentPage, itemsPerPage) {
 
 function applyFilter(kategori, page = 1) {
   if (!window._produkList || !window._gambarList) return;
+  
+  isSearchMode = false; // Reset search mode
   
   let produkFiltered = [...window._produkList];
   let gambarFiltered = [...window._gambarList];
@@ -370,6 +400,7 @@ function applyFilter(kategori, page = 1) {
     gambarFiltered = indexes.map(i => window._gambarList[i]);
   }
 
+  currentPage = page;
   renderProduk(produkFiltered, gambarFiltered, page, 12);
 }
 
@@ -380,6 +411,12 @@ function setupFilterButtons() {
       buttons.forEach(btn => btn.classList.remove('filter-active'));
       button.classList.add('filter-active');
       const kategori = button.getAttribute('data-filter');
+      
+      const searchInput = document.getElementById('search-input');
+      if (searchInput) {
+        searchInput.value = '';
+      }
+      
       applyFilter(kategori, 1);
     });
   });
@@ -389,7 +426,6 @@ async function loadProduk() {
   console.log('loadProduk started');
   
   try {
-    // Load produk individual dan paket harga secara terpisah
     const [produkData, paketList] = await Promise.all([
       fetchProdukData(),
       fetchPaketHarga()
@@ -406,24 +442,120 @@ async function loadProduk() {
       gambar: gambarList.length,
       paket: paketList.length
     });
-    
+
     setupFilterButtons();
+    setupSearchInput();
     applyFilter('all', 1);
-    
-    // RENDER PAKET HARGA
+
+    // render awal: tampilkan semua paket
     if (paketList && paketList.length > 0) {
-      console.log('Calling renderPaketHarga with', paketList.length, 'packages');
       renderPaketHarga(paketList);
     } else {
       console.error('No paket data found!');
     }
-    
+
   } catch (error) {
     console.error('Gagal memuat produk:', error);
+  }
+}
+
+function performSearch(page = 1) {
+  const keyword = document.getElementById('search-input').value.toLowerCase().trim();
+  
+  if (!window._produkList || !window._gambarList) return;
+
+  isSearchMode = true;
+  currentPage = page;
+
+  if (keyword === '') {
+    isSearchMode = false;
+    applyFilter('all', 1);
+    // Pastikan paket harga tetap ditampilkan lengkap
+    if (window._paketList && window._paketList.length > 0) {
+      renderPaketHarga(window._paketList);
+    }
+    return;
+  }
+
+  const hasil = window._produkList
+    .map((p, i) => ({ produk: p, gambar: window._gambarList[i] }))
+    .filter(({ produk }) => produk.nama.toLowerCase().includes(keyword));
+
+  // Render hasil pencarian produk
+  renderProduk(
+    hasil.map(h => h.produk),
+    hasil.map(h => h.gambar),
+    page, 12
+  );
+
+  const buttons = document.querySelectorAll('#filter-buttons li');
+  buttons.forEach(btn => btn.classList.remove('filter-active'));
+  const allButton = document.querySelector('#filter-buttons li[data-filter="all"]');
+  if (allButton) {
+    allButton.classList.add('filter-active');
+  }
+
+  if (window._paketList && window._paketList.length > 0) {
+    renderPaketHarga(window._paketList);
+  }
+}
+
+function setupSearchInput() {
+  const searchButton = document.getElementById('search-button');
+  const searchInput = document.getElementById('search-input');
+  
+  if (searchButton) {
+    searchButton.addEventListener('click', function() {
+      performSearch(1); // Hanya memanggil pencarian produk
+    });
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        performSearch(1); // Hanya memanggil pencarian produk
+      }
+    });
   }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
   console.log('DOM Content Loaded');
   loadProduk();
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  const whatsappForm = document.getElementById("whatsappForm");
+  if (whatsappForm) {
+    whatsappForm.addEventListener("submit", function(event) {
+      event.preventDefault(); 
+
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const message = document.getElementById("message").value.trim();
+
+      const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+
+      if (name === "") {
+        alert("Nama wajib diisi.");
+        return;
+      }
+
+      if (email === "" || !emailPattern.test(email)) {
+        alert("Masukkan email yang valid.");
+        return;
+      }
+
+      if (message === "") {
+        alert("Pesan wajib diisi.");
+        return;
+      }
+
+      const text = `Halo, saya ${name}.%0AEmail: ${email}%0APesan: ${message}`;
+      const phoneNumber = "6289666119737"; 
+
+      const whatsappURL = `https://wa.me/${phoneNumber}?text=${text}`;
+      window.open(whatsappURL, '_blank');
+    });
+  }
 });
