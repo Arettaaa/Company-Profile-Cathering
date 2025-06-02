@@ -211,7 +211,6 @@ function renderProduk(produkList, gambarList, page = 1, itemsPerPage = 12) {
 }
 
  
-// FETCH DATA PAKET HARGA TERPISAH - FIXED VERSION
 async function fetchPaketHarga() {
   try {
     const response = await fetch('data/harga-paket.xml');
@@ -447,7 +446,6 @@ async function loadProduk() {
     setupSearchInput();
     applyFilter('all', 1);
 
-    // render awal: tampilkan semua paket
     if (paketList && paketList.length > 0) {
       renderPaketHarga(paketList);
     } else {
@@ -481,7 +479,6 @@ function performSearch(page = 1) {
     .map((p, i) => ({ produk: p, gambar: window._gambarList[i] }))
     .filter(({ produk }) => produk.nama.toLowerCase().includes(keyword));
 
-  // Render hasil pencarian produk
   renderProduk(
     hasil.map(h => h.produk),
     hasil.map(h => h.gambar),
@@ -506,14 +503,14 @@ function setupSearchInput() {
   
   if (searchButton) {
     searchButton.addEventListener('click', function() {
-      performSearch(1); // Hanya memanggil pencarian produk
+      performSearch(1); 
     });
   }
 
   if (searchInput) {
     searchInput.addEventListener('keypress', function(e) {
       if (e.key === 'Enter') {
-        performSearch(1); // Hanya memanggil pencarian produk
+        performSearch(1); 
       }
     });
   }
