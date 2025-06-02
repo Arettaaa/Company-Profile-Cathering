@@ -368,10 +368,8 @@ function renderPagination(totalItems, currentPage, itemsPerPage) {
     li.addEventListener('click', (e) => {
       e.preventDefault();
       if (isSearchMode) {
-        // Jika dalam mode pencarian, gunakan hasil pencarian
         performSearch(i);
       } else {
-        // Jika tidak dalam mode pencarian, gunakan filter biasa
         const filterBtn = document.querySelector('#filter-buttons .filter-active');
         const filter = filterBtn ? filterBtn.getAttribute('data-filter') : 'all';
         applyFilter(filter, i);
@@ -415,6 +413,8 @@ function setupFilterButtons() {
       if (searchInput) {
         searchInput.value = '';
       }
+      
+      isSearchMode = false;
       
       applyFilter(kategori, 1);
     });
@@ -467,7 +467,11 @@ function performSearch(page = 1) {
 
   if (keyword === '') {
     isSearchMode = false;
-    applyFilter('all', 1);
+    // Kembalikan ke filter kategori yang sedang aktif
+    const activeFilterBtn = document.querySelector('#filter-buttons .filter-active');
+    const activeFilter = activeFilterBtn ? activeFilterBtn.getAttribute('data-filter') : 'all';
+    applyFilter(activeFilter, 1);
+    
     // Pastikan paket harga tetap ditampilkan lengkap
     if (window._paketList && window._paketList.length > 0) {
       renderPaketHarga(window._paketList);
@@ -475,8 +479,26 @@ function performSearch(page = 1) {
     return;
   }
 
-  const hasil = window._produkList
-    .map((p, i) => ({ produk: p, gambar: window._gambarList[i] }))
+  // Dapatkan kategori yang sedang aktif
+  const activeFilterBtn = document.querySelector('#filter-buttons .filter-active');
+  const activeFilter = activeFilterBtn ? activeFilterBtn.getAttribute('data-filter') : 'all';
+
+  // Filter berdasarkan kategori terlebih dahulu (jika bukan 'all')
+  let produkToSearch = window._produkList;
+  let gambarToSearch = window._gambarList;
+  
+  if (activeFilter !== 'all') {
+    const filteredIndexes = window._produkList
+      .map((p, i) => (p.kategori === activeFilter ? i : -1))
+      .filter(i => i !== -1);
+    
+    produkToSearch = filteredIndexes.map(i => window._produkList[i]);
+    gambarToSearch = filteredIndexes.map(i => window._gambarList[i]);
+  }
+
+  // Kemudian filter berdasarkan keyword dalam kategori yang sudah difilter
+  const hasil = produkToSearch
+    .map((p, i) => ({ produk: p, gambar: gambarToSearch[i] }))
     .filter(({ produk }) => produk.nama.toLowerCase().includes(keyword));
 
   renderProduk(
@@ -485,17 +507,19 @@ function performSearch(page = 1) {
     page, 12
   );
 
-  const buttons = document.querySelectorAll('#filter-buttons li');
-  buttons.forEach(btn => btn.classList.remove('filter-active'));
-  const allButton = document.querySelector('#filter-buttons li[data-filter="all"]');
-  if (allButton) {
-    allButton.classList.add('filter-active');
-  }
+  // Jangan ubah button aktif saat search - pertahankan kategori yang dipilih
+  // buttons.forEach(btn => btn.classList.remove('filter-active'));
+  // const allButton = document.querySelector('#filter-buttons li[data-filter="all"]');
+  // if (allButton) {
+  //   allButton.classList.add('filter-active');
+  // }
 
   if (window._paketList && window._paketList.length > 0) {
     renderPaketHarga(window._paketList);
   }
 }
+
+
 
 function setupSearchInput() {
   const searchButton = document.getElementById('search-button');
