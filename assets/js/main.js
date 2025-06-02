@@ -190,13 +190,13 @@ function renderProduk(produkList, gambarList, page = 1, itemsPerPage = 12) {
   paginatedProduk.forEach((produk, i) => {
     const gambar = paginatedGambar[i] || 'assets/img/default.png';
     const col = document.createElement('div');
-    col.className = `col-lg-4 col-md-6 portfolio-item filter-${produk.kategori.toLowerCase()}`;
+    col.className = `col-lg-4 col-md-6 productt-item filter-${produk.kategori.toLowerCase()}`;
     col.setAttribute('data-kategori', produk.kategori);
 
     col.innerHTML = `
-      <div class="portfolio-content h-100">
+      <div class="productt-content h-100">
         <img src="${gambar}" class="img-fluid" alt="${produk.nama}">
-        <div class="portfolio-info">
+        <div class="productt-info">
           <h4>${produk.kategori}</h4>
           <h3>${produk.nama}</h3>
           <p>Harga: Rp${produk.harga}</p>
