@@ -332,7 +332,7 @@ function renderPaketHarga(paketList) {
           ${deskripsiHTML}
         </ul>
         ${paketItemsHTML}
-        <a href="https://wa.me/6281316370513" class="btn-buy">Pesan</a>
+        <a href="https://wa.me/6285813207889" class="btn-buy">Pesan</a>
       </div>
     `;
 
@@ -573,7 +573,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
 
       const text = `Halo, saya ${name}.%0AEmail: ${email}%0APesan: ${message}`;
-      const phoneNumber = "6289666119737"; 
+      const phoneNumber = "6285813207889"; 
 
       const whatsappURL = `https://wa.me/${phoneNumber}?text=${text}`;
       window.open(whatsappURL, '_blank');
