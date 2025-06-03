@@ -507,13 +507,6 @@ function performSearch(page = 1) {
     page, 12
   );
 
-  // Jangan ubah button aktif saat search - pertahankan kategori yang dipilih
-  // buttons.forEach(btn => btn.classList.remove('filter-active'));
-  // const allButton = document.querySelector('#filter-buttons li[data-filter="all"]');
-  // if (allButton) {
-  //   allButton.classList.add('filter-active');
-  // }
-
   if (window._paketList && window._paketList.length > 0) {
     renderPaketHarga(window._paketList);
   }
